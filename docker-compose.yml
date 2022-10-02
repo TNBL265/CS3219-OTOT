@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  node:
+    container_name: otot-node
+    image: blongtran/otot:node
+    ports:
+      - "8080:8080"
+  nginx:
+    container_name: otot-nginx
+    image: blongtran/otot:nginx
+    restart: always
+    ports:
+      - "80:80"
