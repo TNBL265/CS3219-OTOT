@@ -71,3 +71,27 @@ Place your manifests in k8s/manifests/ and commands used in k8s/a3_setup.sh.
 ```shell
 docker-compose down --rmi all -v --remove-orphans
 ```
+### A2
+> `$ alias k=kubectl`
+- Create k8s cluster
+```shell
+kind create cluster --name otot --config k8s/kind/cluster-config.yml
+
+docker ps -a 
+
+k cluster-info
+```
+- Create deployment, service for `node` images from A1.1_3
+```shell
+k apply -f k8s/manifests/node.yaml
+```
+- Create deployment, service and ingress for `nginx` images from A1.1_3
+```shell
+k apply -f k8s/manifests/node.yaml
+```
+- Create ingress controller
+```shell
+k apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+```
+- Check output at http://localhost 
+
