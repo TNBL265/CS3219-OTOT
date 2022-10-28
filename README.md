@@ -75,7 +75,7 @@ docker-compose down --rmi all -v --remove-orphans
 > `$ alias k=kubectl`
 - Create k8s cluster
 ```shell
-kind create cluster --name otot --config k8s/kind/cluster-config.yml
+kind create cluster --name otot --config k8s/kind/cluster-config.yaml
 
 docker ps -a 
 
@@ -87,7 +87,7 @@ k apply -f k8s/manifests/node.yaml
 ```
 - Create deployment, service and ingress for `nginx` images from A1.1_3
 ```shell
-k apply -f k8s/manifests/node.yaml
+k apply -f k8s/manifests/nginx.yaml
 ```
 - Create ingress controller
 ```shell
@@ -95,3 +95,23 @@ k apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deplo
 ```
 - Check output at http://localhost 
 
+### A3
+- Create metrics server
+  ```shell
+  k apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+  ````
+  - edit TLS `k -nkube-system edit deploy/metrics-server`
+  - add flag `--kubelet-insecure-tls` to `deployment.spec.containers[].args[]`
+  - rerun `k -nkube-system rollout restart deploy/metrics-server`
+- Apply `HorizontalPodAutoscaler`
+```shell
+k apply -f k8s/manifests/hpa.yaml
+
+k get po --watch
+```
+- Apply `topologySpreadConstraints`
+```shell
+k apply -f k8s/manifests/nginx.yaml
+
+k get po -owide --sort-by='.spec.nodeName'
+```
